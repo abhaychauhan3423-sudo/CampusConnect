@@ -6,6 +6,7 @@ const User = require('../models/User');
 const ApiError = require('../utils/ApiError');
 const asyncHandler = require('../utils/asyncHandler');
 const escapeRegex = require('../utils/escapeRegex');
+const { createNotification } = require('../services/notificationService');
 
 const uploadDir = path.join(__dirname, '..', '..', 'uploads');
 fs.mkdirSync(uploadDir, { recursive: true });
@@ -157,6 +158,16 @@ exports.toggleLike = asyncHandler(async (req, res) => {
   if (index === -1) post.likes.push(req.user._id);
   else post.likes.splice(index, 1);
   await post.save();
+  if (index === -1) {
+    await createNotification({
+      recipient: post.author,
+      actor: req.user._id,
+      type: 'post_like',
+      resourceType: 'post',
+      resourceId: post._id,
+      message: 'liked your post.',
+    });
+  }
   res.json({ success: true, data: { liked: index === -1, likesCount: post.likes.length } });
 });
 
@@ -166,6 +177,14 @@ exports.addComment = asyncHandler(async (req, res) => {
   const post = await findPost(req.params.id);
   post.comments.push({ author: req.user._id, text });
   await post.save();
+  await createNotification({
+    recipient: post.author,
+    actor: req.user._id,
+    type: 'post_comment',
+    resourceType: 'post',
+    resourceId: post._id,
+    message: 'commented on your post.',
+  });
   await post.populate('comments.author', 'name avatar');
   res.status(201).json({ success: true, data: { comments: post.comments, commentsCount: post.comments.length } });
 });

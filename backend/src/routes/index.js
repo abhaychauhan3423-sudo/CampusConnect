@@ -5,7 +5,9 @@ router.use('/auth', require('./authRoutes'));
 router.use('/users', require('./userRoutes'));
 router.use('/posts', require('./postRoutes'));
 router.use('/reports', require('./reportRoutes'));
+router.use('/notifications', require('./notificationRoutes'));
 // Later phases mount: connections, conversations, events, projects, opportunities,
-// notifications, dashboard, search.
+// dashboard, search. Those modules can create persisted notifications through
+// services/notificationService.
 
 module.exports = router;

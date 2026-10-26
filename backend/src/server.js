@@ -10,7 +10,7 @@ const PORT = process.env.PORT || 5000;
     if (!process.env.JWT_SECRET) throw new Error('JWT_SECRET is not set in backend/.env');
     await connectDB(process.env.MONGODB_URI);
     const server = http.createServer(app);
-    // Phase 5 attaches Socket.IO to this same HTTP server.
+    require('./socket').initializeSocket(server);
     server.listen(PORT, () => console.log(`API listening on http://localhost:${PORT}`));
   } catch (err) {
     console.error('Startup failed:', err.message);

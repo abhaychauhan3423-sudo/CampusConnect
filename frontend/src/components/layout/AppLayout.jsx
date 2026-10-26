@@ -3,6 +3,7 @@ import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { Flag, GraduationCap, LayoutDashboard, LogOut, Menu, Newspaper, Search, User, Users, X } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import Avatar from '../common/Avatar';
+import NotificationBell from '../notifications/NotificationBell';
 
 // Only links to pages that exist. New phases add their links here.
 const links = [
@@ -89,6 +90,7 @@ export default function AppLayout() {
             />
           </form>
           <div className="ml-auto flex items-center gap-3">
+            <NotificationBell />
             <button onClick={() => navigate('/profile')} aria-label="My profile"><Avatar user={user} size={32} /></button>
             <button onClick={handleLogout} className="flex items-center gap-1 text-sm text-slate-600 hover:text-red-600">
               <LogOut className="h-4 w-4" aria-hidden="true" /> <span className="hidden sm:inline">Logout</span>

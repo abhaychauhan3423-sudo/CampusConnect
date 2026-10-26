@@ -7,6 +7,7 @@ const app = require('../src/app');
 const User = require('../src/models/User');
 const Post = require('../src/models/Post');
 const Report = require('../src/models/Report');
+const Notification = require('../src/models/Notification');
 
 let mongod;
 const student = (email, name) => ({
@@ -26,13 +27,14 @@ beforeAll(async () => {
   await User.init();
   await Post.init();
   await Report.init();
+  await Notification.init();
 });
 afterAll(async () => {
   await mongoose.disconnect();
   await mongod.stop();
 });
 beforeEach(async () => {
-  await Promise.all([User.deleteMany({}), Post.deleteMany({}), Report.deleteMany({})]);
+  await Promise.all([User.deleteMany({}), Post.deleteMany({}), Report.deleteMany({}), Notification.deleteMany({})]);
 });
 
 describe('Student feed', () => {
@@ -80,11 +82,14 @@ describe('Student feed', () => {
 
     expect((await request(app).post(`/api/posts/${postId}/like`).set(auth(bob.token))).body.data)
       .toEqual({ liked: true, likesCount: 1 });
+    expect(await Notification.countDocuments({ recipient: alice.id, type: 'post_like' })).toBe(1);
     expect((await request(app).post(`/api/posts/${postId}/like`).set(auth(bob.token))).body.data)
       .toEqual({ liked: false, likesCount: 0 });
+    expect(await Notification.countDocuments({ recipient: alice.id, type: 'post_like' })).toBe(1);
 
     const comment = await request(app).post(`/api/posts/${postId}/comments`).set(auth(bob.token)).send({ text: 'Nice!' });
     expect(comment.status).toBe(201);
+    expect(await Notification.countDocuments({ recipient: alice.id, type: 'post_comment' })).toBe(1);
     const commentId = comment.body.data.comments[0]._id;
     expect((await request(app).delete(`/api/posts/${postId}/comments/${commentId}`).set(auth(alice.token))).status).toBe(403);
     expect((await request(app).delete(`/api/posts/${postId}/comments/${commentId}`).set(auth(bob.token))).status).toBe(200);
