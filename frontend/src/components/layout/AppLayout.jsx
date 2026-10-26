@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
-import { GraduationCap, LayoutDashboard, LogOut, Menu, Search, User, Users, X } from 'lucide-react';
+import { GraduationCap, LayoutDashboard, LogOut, Menu, MessageSquare, Search, User, Users, X } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import Avatar from '../common/Avatar';
 
@@ -8,6 +8,7 @@ import Avatar from '../common/Avatar';
 const links = [
   { to: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { to: '/students', label: 'Students', icon: Users },
+  { to: '/messages', label: 'Messages', icon: MessageSquare },
   { to: '/profile', label: 'My Profile', icon: User },
 ];
 
