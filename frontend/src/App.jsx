@@ -11,6 +11,7 @@ import StudentsPage from './pages/StudentsPage.jsx';
 import FeedPage from './pages/FeedPage.jsx';
 import AdminReportsPage from './pages/AdminReportsPage.jsx';
 import NotificationsPage from './pages/NotificationsPage.jsx';
+import Messages from './pages/Messages.jsx';
 import NotFoundPage from './pages/NotFoundPage.jsx';
 
 export default function App() {
@@ -27,6 +28,8 @@ export default function App() {
           <Route path="/feed" element={<FeedPage />} />
           <Route path="/notifications" element={<NotificationsPage />} />
           <Route path="/students" element={<StudentsPage />} />
+          <Route path="/messages" element={<Messages />} />
+          <Route path="/messages/:id" element={<Messages />} />
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/profile/:id" element={<ProfilePage />} />
           <Route path="/admin/reports" element={<AdminReportsPage />} />

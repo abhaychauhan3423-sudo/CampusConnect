@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { Github, Linkedin, Globe, Trophy } from 'lucide-react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { Github, Linkedin, Globe, Trophy, MessageSquare } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { getUser, updateProfile } from '../services/userService';
 import { getErrorMessage } from '../services/api';
@@ -79,6 +79,7 @@ const Tags = ({ title, items, color }) => items.length > 0 && (
 
 export default function ProfilePage() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const { user: me, setUser } = useAuth();
   const isOwn = !id || id === me._id;
   const [profile, setProfile] = useState(isOwn ? me : null);
@@ -115,7 +116,16 @@ export default function ProfilePage() {
             <p className="text-slate-600">{profile.course}{profile.department && ` · ${profile.department}`} · Year {profile.year}</p>
             <p className="text-sm text-slate-500">{profile.college}</p>
           </div>
-          {isOwn && <Button onClick={() => setEditing(true)}>Edit profile</Button>}
+          {isOwn ? (
+            <Button onClick={() => setEditing(true)}>Edit profile</Button>
+          ) : (
+            <Button
+              onClick={() => navigate(`/messages?userId=${profile._id}`)}
+              className="flex items-center gap-1.5"
+            >
+              <MessageSquare className="h-4 w-4" /> Message
+            </Button>
+          )}
         </div>
         {profile.bio ? <p className="mt-4 text-slate-700">{profile.bio}</p>
           : isOwn && <p className="mt-4 text-sm text-slate-400">Add a short bio to introduce yourself.</p>}
